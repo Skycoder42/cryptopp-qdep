@@ -3,7 +3,7 @@ CONFIG += static simd
 CONFIG -= qt
 
 TARGET = qtcryptopp
-VERSION = 8.0.0
+VERSION = 8.1.0
 
 load(qt_build_config)
 
@@ -33,6 +33,7 @@ HEADERS += \
 	cryptopp/cbcmac.h \
 	cryptopp/ccm.h \
 	cryptopp/chacha.h \
+	cryptopp/chachapoly.h \
 	cryptopp/cham.h \
 	cryptopp/channels.h \
 	cryptopp/cmac.h \
@@ -90,7 +91,6 @@ HEADERS += \
 	cryptopp/iterhash.h \
 	cryptopp/kalyna.h \
 	cryptopp/keccak.h \
-	cryptopp/keccakc.h \
 	cryptopp/lea.h \
 	cryptopp/lubyrack.h \
 	cryptopp/luc.h \
@@ -149,6 +149,7 @@ HEADERS += \
 	cryptopp/sha.h \
 	cryptopp/sha3.h \
 	cryptopp/shacal2.h \
+	cryptopp/shake.h \
 	cryptopp/shark.h \
 	cryptopp/simeck.h \
 	cryptopp/simon.h \
@@ -206,6 +207,7 @@ SOURCES += \
 	cryptopp/cbcmac.cpp \
 	cryptopp/ccm.cpp \
 	cryptopp/chacha.cpp \
+	cryptopp/chachapoly.cpp \
 	cryptopp/cham.cpp \
 	cryptopp/channels.cpp \
 	cryptopp/cmac.cpp \
@@ -253,7 +255,7 @@ SOURCES += \
 	cryptopp/kalyna.cpp \
 	cryptopp/kalynatab.cpp \
 	cryptopp/keccak.cpp \
-	cryptopp/keccakc.cpp \
+	cryptopp/keccak_core.cpp \
 	cryptopp/lea.cpp \
 	cryptopp/luc.cpp \
 	cryptopp/mars.cpp \
@@ -298,6 +300,7 @@ SOURCES += \
 	cryptopp/sha.cpp \
 	cryptopp/sha3.cpp \
 	cryptopp/shacal2.cpp \
+	cryptopp/shake.cpp \
 	cryptopp/shark.cpp \
 	cryptopp/sharkbox.cpp \
 	cryptopp/simeck.cpp \
@@ -338,6 +341,8 @@ SSSE3_SOURCES += \
 	cryptopp/aria_simd.cpp \
 	cryptopp/cham_simd.cpp \
 	cryptopp/gcm_simd.cpp \
+	cryptopp/gf2n_simd.cpp \
+	cryptopp/keccak_simd.cpp \
 	cryptopp/lea_simd.cpp \
 	cryptopp/simeck_simd.cpp \
 	cryptopp/simon128_simd.cpp \
@@ -367,10 +372,14 @@ NEON_SOURCES += \
 	cryptopp/simon128_simd.cpp \
 	cryptopp/speck64_simd.cpp \
 	cryptopp/speck128_simd.cpp
+	
+ARMABI_HEADERS += \
+	cryptopp/arm_simd.h
 
 ARMABI_SOURCES +=  \
 	cryptopp/crc_simd.cpp \
 	cryptopp/gcm_simd.cpp \
+	cryptopp/gf2n_simd.cpp \
 	cryptopp/rijndael_simd.cpp \
 	cryptopp/sha_simd.cpp \
 	cryptopp/shacal2_simd.cpp
@@ -414,8 +423,10 @@ win32:!win32-g++ {
 	SOURCES += $$(ANDROID_NDK_ROOT)/sources/android/cpufeatures/cpu-features.c
 
 	equals(ANDROID_TARGET_ARCH, arm64-v8a) {
+		HEADERS += $$ARMABI_HEADERS
 		SOURCES += $$ARMABI_SOURCES
 	} else:equals(ANDROID_TARGET_ARCH, armeabi-v7a) {
+		HEADERS += $$ARMABI_HEADERS
 		SOURCES += $$ARMABI_SOURCES
 
 		NEON_ASM += \

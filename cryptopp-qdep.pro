@@ -3,7 +3,7 @@ CONFIG += static simd
 CONFIG -= qt
 
 TARGET = qtcryptopp
-VERSION = 8.1.0
+VERSION = 8.2.0
 
 load(qt_build_config)
 
@@ -372,7 +372,7 @@ NEON_SOURCES += \
 	cryptopp/simon128_simd.cpp \
 	cryptopp/speck64_simd.cpp \
 	cryptopp/speck128_simd.cpp
-	
+
 ARMABI_HEADERS += \
 	cryptopp/arm_simd.h
 
